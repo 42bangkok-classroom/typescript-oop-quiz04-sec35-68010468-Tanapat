@@ -8,10 +8,8 @@ export class UserService {
   test() {
     return [];
   }
-  async findAll() {
+  async findAll() {}
 
-  }
-  
   findOne(id: string, fields?: string[]) {
     const filePath = path.join(process.cwd(), 'data', 'users.json');
     // eslint-disable-next-line
