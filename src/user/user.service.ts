@@ -6,35 +6,34 @@ import { IUser } from './user.interface';
 @Injectable()
 export class UserService {
   test() {
-    return [] ;
+    return [];
   }
-  async findAll(){
-    
-  }
-  findOne(id: string, fields?: string[]) {
-    // 1. อ่านข้อมูลจากไฟล์ (ถ้าคุณมี this.findAll() จากข้อ 3 แล้ว สามารถเรียกใช้แทน 2 บรรทัดนี้ได้เลย)
-    const filePath = path.join(process.cwd(), 'data', 'users.json');
-    const users: IUser[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
+  async findAll() {
 
-    // 2. ค้นหา user ตาม id
+  }
+  
+  findOne(id: string, fields?: string[]) {
+    const filePath = path.join(process.cwd(), 'data', 'users.json');
+    // eslint-disable-next-line
+    const users: IUser[] = JSON.parse(fs.readFileSync(filePath, 'utf-8'));
     const user = users.find((u) => u.id === id);
 
-    // 3. ถ้าไม่พบ user ให้ throw NotFoundException (404)
     if (!user) {
       throw new NotFoundException('User not found');
     }
 
-    // 4. ถ้ามี Query Parameter fields ระบุมา ให้ทำการ Filter Fields
     if (fields && fields.length > 0) {
-      const filteredUser = {};
+      // ระบุ Type ให้ชัดเจนว่าเป็น Partial<IUser> เพื่อแก้ Error ลินเตอร์
+      const filteredUser: Partial<IUser> = {};
       fields.forEach((field) => {
-        // เช็คว่ามี field นี้ใน object user หรือไม่
-        if (user[field as keyof IUser] !== undefined) {
-          filteredUser[field] = user[field as keyof IUser];
+        const key = field as keyof IUser;
+        if (user[key] !== undefined) {
+          filteredUser[key] = user[key];
         }
       });
       return filteredUser;
     }
+
     return user;
-}
+  }
 }
