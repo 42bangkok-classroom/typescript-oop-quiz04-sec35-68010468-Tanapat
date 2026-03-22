@@ -1,0 +1,901 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.github/
+  classroom/
+    autograding.json
+  workflows/
+    classroom.yml
+data/
+  users.json
+src/
+  user/
+    user.controller.ts
+    user.interface.ts
+    user.module.ts
+    user.service.ts
+  app.controller.ts
+  app.module.ts
+  app.service.ts
+  main.ts
+subjects/
+  p01.subject.md
+  p02.subject.md
+  p03.subject.md
+  p04.subject.md
+  p05.subject.md
+.gitignore
+.prettierrc
+eslint.config.mjs
+nest-cli.json
+package.json
+README.md
+tsconfig.build.json
+tsconfig.json
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".github/classroom/autograding.json">
+{
+    "title": "TypeScript OOP Quiz 4 Section 35",
+    "tests": [
+      {
+        "name": "Problem 1 - Unit Test",
+        "run": "npm run test:p01",
+        "points": 0.5
+      },
+      {
+        "name": "Problem 1 - E2E Test",
+        "run": "npm run test:e2e:p01",
+        "points": 0.5
+      },
+      {
+        "name": "Problem 2 - Unit Test",
+        "run": "npm run test:p02",
+        "points": 0.5
+      },
+      {
+        "name": "Problem 2 - E2E Test",
+        "run": "npm run test:e2e:p02",
+        "points": 0.5
+      },
+      {
+        "name": "Problem 3 - Unit Test",
+        "run": "npm run test:p03",
+        "points": 0.5
+      },
+      {
+        "name": "Problem 3 - E2E Test",
+        "run": "npm run test:e2e:p03",
+        "points": 0.5
+      },
+      {
+        "name": "Problem 4 - Unit Test",
+        "run": "npm run test:p04",
+        "points": 0.5
+      },
+      {
+        "name": "Problem 4 - E2E Test",
+        "run": "npm run test:e2e:p04",
+        "points": 0.5
+      },
+      {
+        "name": "Problem 5 - Unit Test",
+        "run": "npm run test:p05",
+        "points": 0.5
+      },
+      {
+        "name": "Problem 5 - E2E Test",
+        "run": "npm run test:e2e:p05",
+        "points": 0.5
+      }
+    ]
+  }
+</file>
+
+<file path=".github/workflows/classroom.yml">
+name: Autograding
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  checks: write
+  actions: read
+  contents: read
+
+jobs:
+  autograde:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout student repo
+      - name: Checkout student submission
+        uses: actions/checkout@v4
+
+      # 2. Setup Node.js
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      # 3. Clone Tester
+      - name: Clone tester repository
+        run: |
+          git clone https://oauth2:${GITLAB_TOKEN}@gitlab.com/42bangkok-classroom/typescript-oop-quiz-4-sec35-tester.git tester
+        env:
+          GITLAB_TOKEN: ${{ secrets.OOP_CLASSROOM_GITLAB_TOKEN }}
+
+      # 4. Setup files
+      - name: Setup test files
+        run: |
+          echo "=== Setup test files ==="
+          # Create necessary directories if they don't exist
+          mkdir -p src/user test
+          # Copy unit test files from tester/src to subject/src
+          rsync -av \
+            --include="*/" \
+            --include="*.spec.ts" \
+            --exclude="*" \
+            tester/src/ src/
+          # Copy e2e test files from tester/test to subject/test
+          rsync -av \
+            --include="*.e2e-spec.ts" \
+            --include="jest-e2e.json" \
+            --exclude="*" \
+            tester/test/ test/
+          # Copy package.json from tester (contains test scripts and jest config)
+          cp tester/package.json package.json
+          # Copy eslint config from tester
+          cp tester/eslint.config.mjs eslint.config.mjs || true
+          echo "=== Finish Setup test files ==="
+
+      # 5. Install dependencies
+      - name: Install dependencies
+        run: npm install
+
+      # 6. Autograding action (will run test commands automatically)
+      - name: Autograding
+        uses: education/autograding@v1
+</file>
+
+<file path="data/users.json">
+[
+  {
+    "id": "1",
+    "firstName": "สมชาย",
+    "lastName": "ใจดี",
+    "email": "somchai.jaidee@example.com",
+    "username": "somchai_j"
+  },
+  {
+    "id": "2",
+    "firstName": "สมหญิง",
+    "lastName": "รักเรียน",
+    "email": "somying.rakrian@example.com",
+    "username": "somying_r"
+  },
+  {
+    "id": "3",
+    "firstName": "วิชัย",
+    "lastName": "พัฒนาการ",
+    "email": "wichai.pattanakarn@example.com",
+    "username": "wichai_p"
+  },
+  {
+    "id": "4",
+    "firstName": "มาลี",
+    "lastName": "สวยงาม",
+    "email": "malee.suayngam@example.com",
+    "username": "malee_s"
+  },
+  {
+    "id": "5",
+    "firstName": "ประเสริฐ",
+    "lastName": "ดีมาก",
+    "email": "prasert.deemak@example.com",
+    "username": "prasert_d"
+  },
+  {
+    "id": "6",
+    "firstName": "นิดา",
+    "lastName": "ขยันหมั่นเพียร",
+    "email": "nida.khayanmanpian@example.com",
+    "username": "nida_k"
+  },
+  {
+    "id": "7",
+    "firstName": "ธีรพงษ์",
+    "lastName": "เก่งมาก",
+    "email": "teerapong.kengmak@example.com",
+    "username": "teerapong_k"
+  },
+  {
+    "id": "8",
+    "firstName": "กมล",
+    "lastName": "ใสสะอาด",
+    "email": "kamol.saisaart@example.com",
+    "username": "kamol_s"
+  },
+  {
+    "id": "9",
+    "firstName": "อรุณ",
+    "lastName": "สว่างใส",
+    "email": "arun.sawangsi@example.com",
+    "username": "arun_s"
+  },
+  {
+    "id": "10",
+    "firstName": "ปิยะ",
+    "lastName": "รุ่งเรือง",
+    "email": "piya.rungruang@example.com",
+    "username": "piya_r"
+  }
+]
+</file>
+
+<file path="src/user/user.interface.ts">
+export interface IUser {
+  id: number;
+  firstName: string;
+  lastName: string;
+  email: string;
+  username: string;
+}
+</file>
+
+<file path="src/user/user.module.ts">
+import { Controller, Module } from "@nestjs/common";
+import { UserController } from "./user.controller";
+import { UserService } from "./user.service";
+import { timeoutProvider } from "rxjs/internal/scheduler/timeoutProvider";
+
+@Module{
+    Controller: [UserController];
+    providers:[UserService];
+}
+export class UserModule {}
+</file>
+
+<file path="src/main.ts">
+import { NestFactory } from '@nestjs/core';
+import { AppModule } from './app.module';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  await app.listen(process.env.PORT ?? 3000);
+}
+bootstrap();
+</file>
+
+<file path="subjects/p01.subject.md">
+# โจทย์ที่ 1: แก้ไขข้อความ Hello World
+
+**Path:** `GET /`
+
+**ผลลัพธ์:** `"Welcome to NestJS!"`
+
+**ไฟล์ที่ต้องแก้ไข:**
+- `src/app.controller.ts`
+- `src/app.service.ts`
+
+**ตัวอย่างการเรียก API:**
+```bash
+curl http://localhost:3000/
+```
+
+**ตัวอย่างผลลัพธ์:**
+```
+Welcome to NestJS!
+```
+</file>
+
+<file path="subjects/p02.subject.md">
+# โจทย์ที่ 2: สร้าง User Controller และ Service
+
+**Path:** `GET /users/test`
+
+**ผลลัพธ์:** `[]` (empty array)
+
+**ไฟล์ที่ต้องสร้าง:**
+- `src/user/user.service.ts` (class `UserService`, method `test()`)
+- `src/user/user.controller.ts` (class `UserController`)
+
+**ตัวอย่างการเรียก API:**
+```bash
+curl http://localhost:3000/users/test
+```
+
+**ตัวอย่างผลลัพธ์:**
+```json
+[]
+```
+</file>
+
+<file path="subjects/p03.subject.md">
+# โจทย์ที่ 3: สร้าง Interface User และอ่านข้อมูลจากไฟล์
+
+**Path:** `GET /users`
+
+**ผลลัพธ์:** ข้อมูล users ทั้งหมดจากไฟล์ `data/users.json`
+
+**ไฟล์ที่ต้องสร้าง:**
+- `src/user/user.interface.ts` (interface `IUser`)
+
+**ไฟล์ที่ต้องแก้ไข (ไฟล์ที่มีอยู่แล้วจากข้อ 2):**
+- `src/user/user.service.ts` (เพิ่ม method `findAll()` เพื่ออ่านข้อมูลจาก `data/users.json`)
+- `src/user/user.controller.ts` (เพิ่ม endpoint `GET /users`)
+
+**ตัวอย่างการเรียก API:**
+```bash
+curl http://localhost:3000/users
+```
+
+**ตัวอย่างผลลัพธ์:**
+```json
+[
+  {
+    "id": "1",
+    "firstName": "สมชาย",
+    "lastName": "ใจดี",
+    "email": "somchai.jaidee@example.com",
+    "username": "somchai_j"
+  },
+  {
+    "id": "2",
+    "firstName": "สมหญิง",
+    "lastName": "รักเรียน",
+    "email": "somying.rakrian@example.com",
+    "username": "somying_r"
+  }
+  // ... (ข้อมูล users ทั้งหมด 10 รายการ)
+]
+```
+
+**หมายเหตุ:**
+- Interface IUser ต้องมี attributes ตามโครงสร้างข้อมูลใน `data/users.json`
+- Method `findAll()` ต้องอ่านข้อมูลจากไฟล์ `data/users.json` และ return array ของ IUser objects
+</file>
+
+<file path="subjects/p04.subject.md">
+# โจทย์ที่ 4: ดึงข้อมูล User ตาม ID และ Filter Fields
+
+**Path:** `GET /users/:id`
+
+**Query Parameters:** `fields` (string, comma-separated) - ระบุ fields ที่ต้องการดึง เช่น `firstName,lastName,email`
+
+**ผลลัพธ์:** ข้อมูล user ตาม id ที่ระบุ และแสดงเฉพาะ fields ที่ระบุใน query parameter (ถ้ามี)
+
+**ไฟล์ที่ต้องแก้ไข (ไฟล์ที่มีอยู่แล้วจากข้อ 2-3):**
+- `src/user/user.service.ts` (เพิ่ม method `findOne(id: string, fields?: string[])`)
+- `src/user/user.controller.ts` (เพิ่ม endpoint `GET /users/:id` พร้อมรับ query parameter `fields`)
+
+**ตัวอย่างการเรียก API:**
+
+1. ดึงข้อมูล user ทั้งหมดตาม id:
+```bash
+curl http://localhost:3000/users/1
+```
+```json
+{
+  "id": "1",
+  "firstName": "สมชาย",
+  "lastName": "ใจดี",
+  "email": "somchai.jaidee@example.com",
+  "username": "somchai_j"
+}
+```
+
+2. ดึงเฉพาะ fields ที่ระบุ:
+```bash
+curl http://localhost:3000/users/1?fields=firstName,lastName,email
+```
+```json
+{
+  "firstName": "สมชาย",
+  "lastName": "ใจดี",
+  "email": "somchai.jaidee@example.com"
+}
+```
+
+3. ไม่พบ user (id):
+```bash
+curl http://localhost:3000/users/999
+```
+```json
+{
+  "statusCode": 404,
+  "message": "User not found",
+  "error": "Not Found"
+}
+```
+
+**หมายเหตุ:**
+- ถ้าไม่พบ user ตาม id ที่ระบุ ให้ throw `NotFoundException` (404 status code)
+- Query parameter `fields` เป็น optional (ถ้าไม่ระบุให้แสดงข้อมูลทั้งหมด)
+- Fields ที่ระบุต้องเป็น comma-separated string เช่น `firstName,lastName,email`
+</file>
+
+<file path="subjects/p05.subject.md">
+# โจทย์ที่ 5: สร้าง User ใหม่ด้วย DTO และ Validation
+
+**Path:** `POST /users`
+
+**Body:** JSON object ที่มีข้อมูล user ใหม่
+
+**ผลลัพธ์:** สร้าง user ใหม่และบันทึกลงไฟล์ `data/users.json` พร้อม return ข้อมูล user ที่สร้าง
+
+**ไฟล์ที่ต้องสร้าง:**
+- `src/user/dto/create-user.dto.ts` (class `CreateUserDto` พร้อม class-validator decorators)
+
+**ไฟล์ที่ต้องแก้ไข (ไฟล์ที่มีอยู่แล้วจากข้อ 2-4):**
+- `src/user/user.service.ts` (เพิ่ม method `create(dto: CreateUserDto)` เพื่อสร้าง user ใหม่และบันทึกลงไฟล์)
+- `src/user/user.controller.ts` (เพิ่ม endpoint `POST /users` พร้อม ValidationPipe)
+
+**ตัวอย่างการเรียก API:**
+
+1. สร้าง user สำเร็จ:
+```bash
+curl -X POST http://localhost:3000/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "ทดสอบ",
+    "lastName": "ระบบ",
+    "email": "test@example.com",
+    "username": "test_user"
+  }'
+```
+```json
+{
+  "id": "11",
+  "firstName": "ทดสอบ",
+  "lastName": "ระบบ",
+  "email": "test@example.com",
+  "username": "test_user"
+}
+```
+
+2. Validation error (firstName หรือ lastName ว่าง):
+```bash
+curl -X POST http://localhost:3000/users \
+  -H "Content-Type: application/json" \
+  -d '{
+    "firstName": "",
+    "lastName": "ระบบ",
+    "email": "test@example.com",
+    "username": "test_user"
+  }'
+```
+```json
+{
+  "statusCode": 400,
+  "message": ["firstName should not be empty"],
+  "error": "Bad Request"
+}
+```
+
+**เงื่อนไข Validation:**
+
+1. **firstName** (required):
+   - ต้องไม่ว่าง
+
+2. **lastName** (required):
+   - ต้องไม่ว่าง
+
+**หมายเหตุ:**
+- ต้องใช้ `class-validator` สำหรับ validation
+- เมื่อสร้างสำเร็จ ให้ generate `id` ใหม่ (เป็น string ตัวเลขถัดไป)
+- ถ้า validation fail ให้ throw `BadRequestException` (400 status code)
+- ต้องเขียนข้อมูลใหม่ลงไฟล์ `data/users.json` (อ่านไฟล์เดิม, เพิ่ม record ใหม่, เขียนกลับ)
+</file>
+
+<file path=".gitignore">
+# compiled output
+/dist
+/node_modules
+/build
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# OS
+.DS_Store
+
+# Tests
+/coverage
+/.nyc_output
+
+# IDEs and editors
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# temp directory
+.temp
+.tmp
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
+</file>
+
+<file path=".prettierrc">
+{
+  "singleQuote": true,
+  "trailingComma": "all"
+}
+</file>
+
+<file path="eslint.config.mjs">
+// @ts-check
+import eslint from '@eslint/js';
+import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+
+export default tseslint.config(
+  {
+    ignores: ['eslint.config.mjs'],
+  },
+  eslint.configs.recommended,
+  ...tseslint.configs.recommendedTypeChecked,
+  eslintPluginPrettierRecommended,
+  {
+    languageOptions: {
+      globals: {
+        ...globals.node,
+        ...globals.jest,
+      },
+      sourceType: 'commonjs',
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+  },
+  {
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/no-floating-promises': 'warn',
+      '@typescript-eslint/no-unsafe-argument': 'warn',
+      "prettier/prettier": ["error", { endOfLine: "auto" }],
+    },
+  },
+);
+</file>
+
+<file path="nest-cli.json">
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "src",
+  "compilerOptions": {
+    "deleteOutDir": true
+  }
+}
+</file>
+
+<file path="package.json">
+{
+  "name": "subject",
+  "version": "0.0.1",
+  "description": "TypeScript OOP Quiz 4 Section 35",
+  "author": "viruskizz",
+  "private": true,
+  "license": "UNLICENSED",
+  "scripts": {
+    "build": "nest build",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "start": "nest start",
+    "start:dev": "nest start --watch",
+    "start:debug": "nest start --debug --watch"
+  },
+  "dependencies": {
+    "@nestjs/common": "^11.0.1",
+    "@nestjs/core": "^11.0.1",
+    "@nestjs/platform-express": "^11.0.1",
+    "class-transformer": "^0.5.1",
+    "class-validator": "^0.14.1",
+    "reflect-metadata": "^0.2.2",
+    "rxjs": "^7.8.1"
+  },
+  "devDependencies": {
+    "@eslint/eslintrc": "^3.2.0",
+    "@eslint/js": "^9.18.0",
+    "@nestjs/cli": "^11.0.0",
+    "@nestjs/schematics": "^11.0.0",
+    "@types/express": "^5.0.0",
+    "@types/node": "^22.10.7",
+    "eslint": "^9.18.0",
+    "eslint-config-prettier": "^10.0.1",
+    "eslint-plugin-prettier": "^5.2.2",
+    "globals": "^16.0.0",
+    "prettier": "^3.4.2",
+    "source-map-support": "^0.5.21",
+    "ts-loader": "^9.5.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.3",
+    "typescript-eslint": "^8.20.0"
+  }
+}
+</file>
+
+<file path="tsconfig.build.json">
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["node_modules", "test", "dist", "**/*spec.ts"]
+}
+</file>
+
+<file path="tsconfig.json">
+{
+  "compilerOptions": {
+    "module": "nodenext",
+    "moduleResolution": "nodenext",
+    "resolvePackageJsonExports": true,
+    "esModuleInterop": true,
+    "isolatedModules": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "target": "ES2023",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitAny": false,
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false
+  }
+}
+</file>
+
+<file path="src/user/user.service.ts">
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class UserService {
+  test() {
+    return [];
+  }
+}
+</file>
+
+<file path="src/app.service.ts">
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'Welcome to NestJS!';
+  }
+}
+</file>
+
+<file path="README.md">
+[![Review Assignment Due Date](https://classroom.github.com/assets/deadline-readme-button-22041afd0340ce965d47ae6ef1cefeee28c7c493a6346c4f15d667ab976d596c.svg)](https://classroom.github.com/a/Fkvk4Gzn)
+<p align="center">
+  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
+</p>
+
+[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
+[circleci-url]: https://circleci.com/gh/nestjs/nest
+
+  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
+    <p align="center">
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
+<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
+<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
+<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
+<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
+<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
+  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
+    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
+  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
+</p>
+  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
+  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+
+## Description
+
+[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+
+## Project setup
+
+```bash
+$ npm install
+```
+
+## Compile and run the project
+
+```bash
+# development
+$ npm run start
+
+# watch mode
+$ npm run start:dev
+
+# production mode
+$ npm run start:prod
+```
+
+## Run tests
+
+```bash
+# unit tests
+$ npm run test
+
+# e2e tests
+$ npm run test:e2e
+
+# test coverage
+$ npm run test:cov
+```
+
+## Deployment
+
+When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+
+If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+
+```bash
+$ npm install -g @nestjs/mau
+$ mau deploy
+```
+
+With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+
+## Resources
+
+Check out a few resources that may come in handy when working with NestJS:
+
+- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
+- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
+- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
+- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
+- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
+- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
+- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
+- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+
+## Support
+
+Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+
+## Stay in touch
+
+- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
+- Website - [https://nestjs.com](https://nestjs.com/)
+- Twitter - [@nestframework](https://twitter.com/nestframework)
+
+## License
+
+Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+</file>
+
+<file path="src/app.controller.ts">
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service';
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+</file>
+
+<file path="src/app.module.ts">
+import { Module } from '@nestjs/common';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { UserModule } from './user/user.module';
+
+@Module({
+  imports: [UserModule],
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+</file>
+
+<file path="src/user/user.controller.ts">
+import { Controller, Get } from '@nestjs/common';
+import { UserService } from './user.service';
+
+@Controller()
+export class UserController {
+  constructor(private readonly userService: UserService) {}
+
+  @Get()
+  gettest() {
+    return this.userService.test();
+  }
+}
+</file>
+
+</files>
