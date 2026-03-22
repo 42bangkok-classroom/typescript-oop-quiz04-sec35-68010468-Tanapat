@@ -20,7 +20,7 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
-    if (fields && fields.length > 0) {
+    if (fields) {
       // ระบุ Type ให้ชัดเจนว่าเป็น Partial<IUser> เพื่อแก้ Error ลินเตอร์
       const filteredUser: Partial<IUser> = {};
       fields.forEach((field) => {
